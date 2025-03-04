@@ -8,16 +8,15 @@
 
 <body>
     <navbar>
-        <a href="https://About">About</a>
-        <a href="https://ContactUS">Contact Us</a>
-        <a href="https://Store">Store</a>
+        <a href="/about/">About</a>
+        <a href="/contact-us/">Contact Us</a>
+        <a href="/store/">Store</a>
     </navbar>
 
     <h1>Welcome</h1>
     <h2>This is our page</h2>
     <p>This is our first webpage</p>
-    <img src="{ url_for('static', filename='cat.png') }" 
-    style="height:200px">
+    <img src="{{ url_for('static', filename='cat.png') }}" style="height:200px">
     
     <br>
     <a href="https://www.google.com/">Google Page</a>
