@@ -6,8 +6,8 @@ app = Flask("website")
 def home():
     return render_template("home.html")
 
-@app.route("/about/")
-def about():
+@app.route("/api/v1/<station>/<date>")
+def about(station, date):
     return render_template("about.html")
 
 
