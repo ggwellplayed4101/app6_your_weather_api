@@ -4,7 +4,7 @@ This API provides weather information from different weather stations at various
 
 ## Features
 - Get weather data from multiple stations of Europe
-- Get weather data from multiple years
+- Get historical weather data spanning multiple centuries
 
 ## How to use
 - Make a URL request using the following format:
