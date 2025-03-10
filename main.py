@@ -4,21 +4,37 @@ import pandas as pd
 app = Flask(__name__)
 
 
-@app.route("/") 
+@app.route("/")
 def home():
     return render_template("home.html")
 
+
 @app.route("/api/v1/<station>/<date>")
 def about(station, date):
-    filename = r"data_small/TG_STAID" + str(station).zfill(6) + ".txt"
-    df = pd.read_csv(filename, skiprows=20)
+    # Process the date to remove hyphens
+    date_processed = date.replace("-", "")
+    
+    # Construct the filename
+    filename = f"data_small/TG_STAID{str(station).zfill(6)}.txt"
+    
+    try:
+        df = pd.read_csv(filename, skiprows=20, parse_dates=["    DATE"])
+    except FileNotFoundError:
+        return {"error": "Station not found"}, 404
 
-    temperature = str((df.loc[df['    DATE'] == "17560101"]['   TG']).squeeze() / 10)
+    # Query the dataframe for the processed date
+    temperature = df.loc[df['    DATE']==date_processed]['   TG'].squeeze() / 10
+    
+    # Handle missing temperature values (e.g., -9999)
+    if temperature == -9999:
+        return {"error": "Temperature data missing for this date"}, 404
+    
+    return {
+        "station": station,
+        "date": date,
+        "temperature": temperature
+    }
 
-    return {"station": station,
-            "date": date,
-            "temperature": temperature}
 
-
-if __name__=="__main__":
+if __name__ == "__main__":
     app.run(debug=True)
