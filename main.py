@@ -50,19 +50,20 @@ def all_data(station):
     result = df.to_dict(orient="records")
     return result
 
-@app.route("/api/v1/<station>/<year>")
+@app.route("/api/v1/yearly/<station>/<year>")
 def yearly(station, year):
     
     # Construct the filename
     filename = f"data_small/TG_STAID{str(station).zfill(6)}.txt"
     
     try:
-        df = pd.read_csv(filename, skiprows=20, parse_dates=["    DATE"])
+        df = pd.read_csv(filename, skiprows=20)
     except FileNotFoundError:
         return {"error": "Station not found"}, 404
     
-    result = df.to_dict(orient="records")
-    return result
+    df["    DATE"] = df["    DATE"].astype(str)
+    result = df[df["    DATE"].str.startswith(str(year))]
+    return (result.to_dict(orient = "record"))
 
 
 if __name__ == "__main__":
