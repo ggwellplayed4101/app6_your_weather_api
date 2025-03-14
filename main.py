@@ -36,6 +36,34 @@ def about(station, date):
         "temperature": temperature
     }
 
+@app.route("/api/v1/<station>")
+def all_data(station):
+    
+    # Construct the filename
+    filename = f"data_small/TG_STAID{str(station).zfill(6)}.txt"
+    
+    try:
+        df = pd.read_csv(filename, skiprows=20, parse_dates=["    DATE"])
+    except FileNotFoundError:
+        return {"error": "Station not found"}, 404
+    
+    result = df.to_dict(orient="records")
+    return result
+
+@app.route("/api/v1/<station>/<year>")
+def yearly(station, year):
+    
+    # Construct the filename
+    filename = f"data_small/TG_STAID{str(station).zfill(6)}.txt"
+    
+    try:
+        df = pd.read_csv(filename, skiprows=20, parse_dates=["    DATE"])
+    except FileNotFoundError:
+        return {"error": "Station not found"}, 404
+    
+    result = df.to_dict(orient="records")
+    return result
+
 
 if __name__ == "__main__":
     app.run(debug=True)
